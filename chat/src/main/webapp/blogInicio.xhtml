@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Bienvenidos Blog CAD</title>
+</h:head>
+<h:body>
+	<h:form id="frmBlog">
+		<h1>BLOG</h1>
+		<h:panelGrid id="crearBlogPanel" columns="2" style="margin-top: 10px"
+			rendered="#{controladorBlog.objetoBlog.titulo eq null}">
+			<p:outputLabel value="Titulo del Blog: " />
+			<p:inputText value="#{controladorBlog.objetoBlog.titulo}"
+				required="true" requiredMessage="Campo obligatorio" />
+			<p:outputLabel value="Usuario: " />
+			<p:inputText value="#{controladorBlog.objetoBlog.usuario}"
+				required="true" requiredMessage="Campo obligatorio" />
+			<p:commandButton value="Crear Blog" process="@form"
+				actionListener="#{controladorBlog.crearBlog}"
+				update="frmBlog, crearBlogPanel, titulo, informacion"
+				icon="pi pi-save">
+			</p:commandButton>
+			<p:spacer height="3" />
+		</h:panelGrid>
+		<p:dataTable var="blog" value="#{controladorBlog.listObjetoBlog}"
+			rendered="#{!controladorBlog.listObjetoBlog.isEmpty() and controladorBlog.objetoBlog.titulo eq null}">
+			<p:column headerText="Blog">
+				<p:commandLink value="#{blog.titulo}" process="@form"
+					immediate="true" actionListener="#{controladorBlog.cargarBlog}"
+					update="frmBlog" />
+			</p:column>
+		</p:dataTable>
+
+		<p:spacer height="3" />
+		<h:panelGrid id="titulo" columns="1" style="margin-top: 10px"
+			rendered="#{controladorBlog.objetoBlog.titulo ne null}">
+			<h:panelGrid style="margin-top: 10px">
+				<h1>BLOG #{controladorBlog.objetoBlog.titulo}</h1>
+			</h:panelGrid>
+			<h:panelGrid id="informacion" columns="2" style="margin-top: 10px">
+				<h:outputText id="usuariolbl" value="Usuario: " escape="false" />
+				<h:outputText id="usuario"
+					value="#{controladorBlog.objetoBlog.usuario}" escape="false" />
+				<h:outputText id="fechalbl" value="Fecha" escape="false" />
+				<h:outputText id="fecha" value="#{controladorBlog.objetoBlog.fecha}"
+					escape="false" />
+			</h:panelGrid>
+			<p:spacer height="3" />
+			<p:spacer height="3" />
+			<h:panelGrid style="margin-top: 10px">
+				<h:outputText id="display"
+					value="#{controladorBlog.objetoBlog.blog}" escape="false" />
+				<p:spacer height="3" />
+				<p:editor id="editor" widgetVar="editorWidget"
+					value="#{controladorBlog.objetoBlog.blogResponde}" width="600" />
+			</h:panelGrid>
+			<h:panelGrid id="responderBlog" columns="2" style="margin-top: 10px"
+				rendered="#{controladorBlog.objetoBlog.blog.length() gt 0}">
+				<p:outputLabel value="Usuario: " />
+				<p:inputText value="#{controladorBlog.objetoBlog.usuarioResponde}"
+					required="true" requiredMessage="Campo obligatorio" />
+			</h:panelGrid>
+			<h:panelGrid columns="3" style="margin-top: 10px">
+				<p:commandButton value="Enviar al Blog" process="@form"
+					update="frmBlog, display, editor, responderBlog"
+					action="#{controladorBlog.guardarBlog}" icon="pi pi-save" />
+				<p:commandButton value="Limpiar" type="button"
+					onclick="PF('editorWidget').clear();" icon="pi pi-times" />
+				<p:commandButton value="Regresar" immediate="true"
+					action="index.jsf?faces-redirect=true" />
+			</h:panelGrid>
+		</h:panelGrid>
+
+	</h:form>
+</h:body>
+</html>
